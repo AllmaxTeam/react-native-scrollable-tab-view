@@ -30,7 +30,7 @@ var styles = StyleSheet.create({
   },
 });
 
-var StylishTabBar = React.createClass({
+var DefaultTabBar = React.createClass({
   propTypes: {
     goToPage: React.PropTypes.func,
     activeTab: React.PropTypes.number,
@@ -116,4 +116,4 @@ var StylishTabBar = React.createClass({
   },
 });
 
-module.exports = StylishTabBar;
+module.exports = DefaultTabBar;
