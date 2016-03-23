@@ -12,25 +12,25 @@ var {
 
 var styles = StyleSheet.create({
   tab: {
-    flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
+    marginRight: 30,
     paddingBottom: 10,
   },
 
   tabs: {
-    height: 50,
+    marginTop: 15,
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
     borderWidth: 1,
     borderTopWidth: 0,
     borderLeftWidth: 0,
     borderRightWidth: 0,
-    borderBottomColor: '#ccc',
+    borderBottomColor: '#d2d2d2',
   },
 });
 
-var DefaultTabBar = React.createClass({
+var StylishTabBar = React.createClass({
   propTypes: {
     goToPage: React.PropTypes.func,
     activeTab: React.PropTypes.number,
@@ -41,48 +41,79 @@ var DefaultTabBar = React.createClass({
     inactiveTextColor : React.PropTypes.string,
   },
 
+  getInitialState() {
+    return ({
+      renderUnderline: false
+    })
+  },
+
+  componentWillMount() {
+    this.tabState = {}
+  },
+
+  onTabLayout(event, page) {
+    var {x, y, width, height} = event.nativeEvent.layout;
+    this.tabState[page] = {x: x, y: y, width: width, height: height};
+    if (this.props.tabs.length === Object.keys(this.tabState).length) this.setState({renderUnderline: true})
+  },
+
   renderTabOption(name, page) {
     var isTabActive = this.props.activeTab === page;
     var activeTextColor = this.props.activeTextColor || "navy";
     var inactiveTextColor = this.props.inactiveTextColor || "black";
+    var textStyle = this.props.tabBarTextStyle || {};
+
     return (
-      <TouchableOpacity
-        key={name}
-        accessible={true}
-        accessibilityLabel={name}
-        accessibilityTraits='button'
-        style={[styles.tab]}
-        onPress={() => this.props.goToPage(page)}>
+      <TouchableOpacity style={[styles.tab]}
+                        key={name}
+                        onPress={() => this.props.goToPage(page)}
+                        onLayout={(event) => this.onTabLayout(event, page)}>
         <View>
-          <Text style={{color: isTabActive ? activeTextColor : inactiveTextColor,
-            fontWeight: isTabActive ? 'bold' : 'normal'}}>{name}</Text>
+          <Text style={[{color: isTabActive ? activeTextColor : inactiveTextColor,
+                         fontWeight: isTabActive ? '400' : '400'}, textStyle]}>{name}</Text>
         </View>
       </TouchableOpacity>
     );
   },
 
-  render() {
-    var containerWidth = this.props.containerWidth;
-    var numberOfTabs = this.props.tabs.length;
-    var tabUnderlineStyle = {
-      position: 'absolute',
-      width: containerWidth / numberOfTabs,
-      height: 4,
-      backgroundColor: this.props.underlineColor || "navy",
-      bottom: 0,
-    };
+  renderUnderline() {
+    var inputRange = Object.keys(this.tabState);
+    var outputRangeLeft = [];
+    var outputRangeWidth = [];
+
+    for (var k in this.tabState) {
+      outputRangeLeft.push(this.tabState[k].x);
+      outputRangeWidth.push(this.tabState[k].width);
+    }
 
     var left = this.props.scrollValue.interpolate({
-      inputRange: [0, 1], outputRange: [0,  containerWidth / numberOfTabs]
+      inputRange: inputRange, outputRange: outputRangeLeft
     });
 
+    var width = this.props.scrollValue.interpolate({
+      inputRange: inputRange, outputRange: outputRangeWidth
+    })
+
+    var tabUnderlineStyle = {
+      position: 'absolute',
+      backgroundColor: this.props.underlineColor || "navy",
+      height: 1,
+      bottom: 0
+    };
+
+    return (
+      <Animated.View style={[tabUnderlineStyle, {left}, {width}]} />
+    )
+  },
+
+  render() {
     return (
       <View style={[styles.tabs, {backgroundColor : this.props.backgroundColor || null}, this.props.style, ]}>
         {this.props.tabs.map((tab, i) => this.renderTabOption(tab, i))}
-        <Animated.View style={[tabUnderlineStyle, {left}]} />
+        {this.state.renderUnderline ? this.renderUnderline() : null}
       </View>
     );
   },
 });
 
-module.exports = DefaultTabBar;
+module.exports = StylishTabBar;
