@@ -28,6 +28,24 @@ var styles = StyleSheet.create({
     borderRightWidth: 0,
     borderBottomColor: '#d2d2d2',
   },
+
+  counterBubble: {
+    marginTop: 4,
+    marginLeft: 5,
+    height: 12,
+    width: 17,
+    borderRadius: 4.5,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  counterText: {
+    color: 'white',
+    fontSize: 9,
+    fontWeight: 'bold',
+    fontFamily : "Open Sans",
+    backgroundColor: 'transparent',
+    top: -0.5
+  }
 });
 
 var DefaultTabBar = React.createClass({
@@ -57,7 +75,7 @@ var DefaultTabBar = React.createClass({
     if (this.props.tabs.length === Object.keys(this.tabState).length) this.setState({renderUnderline: true})
   },
 
-  renderTabOption(name, page) {
+  renderTabOption(tab, page) {
     var isTabActive = this.props.activeTab === page;
     var activeTextColor = this.props.activeTextColor || "navy";
     var inactiveTextColor = this.props.inactiveTextColor || "black";
@@ -65,12 +83,15 @@ var DefaultTabBar = React.createClass({
 
     return (
       <TouchableOpacity style={[styles.tab]}
-                        key={name}
+                        key={tab.tabLabel}
                         onPress={() => this.props.goToPage(page)}
                         onLayout={(event) => this.onTabLayout(event, page)}>
-        <View>
+        <View style={{flexDirection: 'row'}}>
           <Text style={[{color: isTabActive ? activeTextColor : inactiveTextColor,
-                         fontWeight: isTabActive ? '400' : '400'}, textStyle]}>{name}</Text>
+                         fontWeight: isTabActive ? '400' : '400'}, textStyle]}>{tab.tabLabel}</Text>
+          <View style={[styles.counterBubble, {backgroundColor: tab.tabCounterColor || activeTextColor}]}>
+            <Text style={styles.counterText}>{tab.tabCounter || 0}</Text>
+          </View>
         </View>
       </TouchableOpacity>
     );
@@ -97,7 +118,7 @@ var DefaultTabBar = React.createClass({
     var tabUnderlineStyle = {
       position: 'absolute',
       backgroundColor: this.props.underlineColor || "navy",
-      height: 1,
+      height: 2,
       bottom: 0
     };
 
