@@ -129,7 +129,7 @@ var DefaultTabBar = React.createClass({
 
   render() {
     return (
-      <View style={[styles.tabs, {backgroundColor : this.props.backgroundColor || null}, this.props.style, ]}>
+      <View style={[styles.tabs, {backgroundColor : this.props.backgroundColor || null}, this.props.style, this.props.tabBarStyle]}>
         {this.props.tabs.map((tab, i) => this.renderTabOption(tab, i))}
         {this.state.renderUnderline ? this.renderUnderline() : null}
       </View>
