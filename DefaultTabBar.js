@@ -13,7 +13,7 @@ var {
 var styles = StyleSheet.create({
   tab: {
     justifyContent: 'center',
-    marginRight: 30,
+    marginLeft: 20,
     paddingBottom: 10,
   },
 
@@ -80,6 +80,7 @@ var DefaultTabBar = React.createClass({
     var activeTextColor = this.props.activeTextColor || "navy";
     var inactiveTextColor = this.props.inactiveTextColor || "black";
     var textStyle = this.props.tabBarTextStyle || {};
+    var tabCouter = tab.tabCounter || 0;
 
     return (
       <TouchableOpacity style={[styles.tab]}
@@ -89,9 +90,12 @@ var DefaultTabBar = React.createClass({
         <View style={{flexDirection: 'row'}}>
           <Text style={[{color: isTabActive ? activeTextColor : inactiveTextColor,
                          fontWeight: isTabActive ? '400' : '400'}, textStyle]}>{tab.tabLabel}</Text>
-          <View style={[styles.counterBubble, {backgroundColor: tab.tabCounterColor || activeTextColor}]}>
-            <Text style={styles.counterText}>{tab.tabCounter || 0}</Text>
-          </View>
+          {tabCounter > 0 ?
+            <View style={[styles.counterBubble, {backgroundColor: tab.tabCounterColor || activeTextColor}]}>
+              <Text style={styles.counterText}>{tabCounter || 0}</Text>
+            </View>
+            : null}
+
         </View>
       </TouchableOpacity>
     );
