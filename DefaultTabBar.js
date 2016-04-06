@@ -80,7 +80,7 @@ var DefaultTabBar = React.createClass({
     var activeTextColor = this.props.activeTextColor || "navy";
     var inactiveTextColor = this.props.inactiveTextColor || "black";
     var textStyle = this.props.tabBarTextStyle || {};
-    var tabCouter = tab.tabCounter || 0;
+    var tabCounter = tab.tabCounter || 0;
 
     return (
       <TouchableOpacity style={[styles.tab]}
