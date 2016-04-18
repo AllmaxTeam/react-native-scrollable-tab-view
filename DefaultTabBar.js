@@ -7,8 +7,11 @@ var {
   TouchableOpacity,
   View,
   Animated,
+  ScrollView,
+  Dimensions
 } = React;
 
+var screen_width = Dimensions.get('window').width;
 
 var styles = StyleSheet.create({
   tab: {
@@ -61,12 +64,31 @@ var DefaultTabBar = React.createClass({
 
   getInitialState() {
     return ({
-      renderUnderline: false
+      renderUnderline: false,
+      tabScrollValue: 0
     })
   },
 
   componentWillMount() {
     this.tabState = {}
+  },
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.activeTab != this.props.activeTab) {
+      let curTabLayout = this.tabState[this.props.activeTab];
+      if ((curTabLayout.x + curTabLayout.width - this.state.tabScrollValue) > screen_width) {
+        let scrollValue = curTabLayout.x + curTabLayout.width - screen_width;
+        if (Object.keys(this.tabState).length != this.props.activeTab + 1)
+          scrollValue += 50;
+        this.refs.scrolltabs.scrollTo({x: scrollValue, y: 0});
+
+      } else if (curTabLayout.x < this.state.tabScrollValue) {
+        if (this.props.activeTab === 0)
+          this.refs.scrolltabs.scrollTo({x: 0, y: 0});
+        else
+          this.refs.scrolltabs.scrollTo({x: curTabLayout.x - 50, y: 0});
+      }
+    }
   },
 
   onTabLayout(event, page) {
@@ -134,8 +156,14 @@ var DefaultTabBar = React.createClass({
   render() {
     return (
       <View style={[styles.tabs, {backgroundColor : this.props.backgroundColor || null}, this.props.style, this.props.tabBarStyle]}>
-        {this.props.tabs.map((tab, i) => this.renderTabOption(tab, i))}
-        {this.state.renderUnderline ? this.renderUnderline() : null}
+        <ScrollView horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    ref={"scrolltabs"}
+                    scrollEventThrottle={16}
+                    onScroll={(e) => {this.setState({tabScrollValue: e.nativeEvent.contentOffset.x})}}>
+          {this.props.tabs.map((tab, i) => this.renderTabOption(tab, i))}
+          {this.state.renderUnderline ? this.renderUnderline() : null}
+        </ScrollView>
       </View>
     );
   },
