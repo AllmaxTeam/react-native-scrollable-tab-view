@@ -94,7 +94,8 @@ var DefaultTabBar = React.createClass({
   onTabLayout(event, page) {
     var {x, y, width, height} = event.nativeEvent.layout;
     this.tabState[page] = {x: x, y: y, width: width, height: height};
-    if (this.props.tabs.length === Object.keys(this.tabState).length) this.setState({renderUnderline: true})
+    if (this.props.tabs.length === Object.keys(this.tabState).length)
+      this.setState({renderUnderline: true});
   },
 
   renderTabOption(tab, page) {

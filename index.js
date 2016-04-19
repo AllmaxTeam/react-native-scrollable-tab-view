@@ -65,8 +65,6 @@ const ScrollableTabView = React.createClass({
     } else {
       this.scrollView.setPage(pageNumber);
     }
-
-    this.setState({currentPage: pageNumber, });
   },
 
   renderTabBar(props) {
@@ -91,16 +89,12 @@ const ScrollableTabView = React.createClass({
           contentOffset={{ x: this.props.initialPage * this.state.containerWidth, }}
           ref={(scrollView) => { this.scrollView = scrollView; }}
           onScroll={(e) => {
-            const offsetX = e.nativeEvent.contentOffset.x;
-            this._updateScrollValue(offsetX / this.state.containerWidth);
-          }}
-//          onMomentumScrollBegin={(e) => {
-//            const offsetX = e.nativeEvent.contentOffset.x;
-//            this._updateSelectedPage(parseInt(offsetX / this.state.containerWidth, 10));
-//          }}
-          onMomentumScrollEnd={(e) => {
-            const offsetX = e.nativeEvent.contentOffset.x;
-            this._updateSelectedPage(parseInt(offsetX / this.state.containerWidth, 10));
+            let offsetX = e.nativeEvent.contentOffset.x;
+            let currentScrollValue = offsetX / this.state.containerWidth;
+            let currentPage = Math.round(currentScrollValue);
+            this._updateScrollValue(currentScrollValue);
+            if (currentPage != this.state.currentPage)
+              this._updateSelectedPage(currentPage);
           }}
           scrollEventThrottle={16}
           showsHorizontalScrollIndicator={false}
