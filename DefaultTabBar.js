@@ -74,21 +74,24 @@ var DefaultTabBar = React.createClass({
   },
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.activeTab != this.props.activeTab) {
-      let curTabLayout = this.tabState[this.props.activeTab];
-      if ((curTabLayout.x + curTabLayout.width - this.state.tabScrollValue) > screen_width) {
+    if (prevProps.activeTab === this.props.activeTab) return;
+
+    const overscrollValue = 50;
+    const deadzoneValue = 50;
+    let curTabLayout = this.tabState[this.props.activeTab];
+
+    if ((curTabLayout.x + curTabLayout.width - this.state.tabScrollValue) > screen_width - deadzoneValue) {
         let scrollValue = curTabLayout.x + curTabLayout.width - screen_width;
         if (Object.keys(this.tabState).length != this.props.activeTab + 1)
-          scrollValue += 50;
+        scrollValue += overscrollValue;
         this.refs.scrolltabs.scrollTo({x: scrollValue, y: 0});
 
-      } else if (curTabLayout.x < this.state.tabScrollValue) {
+    } else if (curTabLayout.x - deadzoneValue < this.state.tabScrollValue) {
         if (this.props.activeTab === 0)
-          this.refs.scrolltabs.scrollTo({x: 0, y: 0});
+        this.refs.scrolltabs.scrollTo({x: 0, y: 0});
         else
-          this.refs.scrolltabs.scrollTo({x: curTabLayout.x - 50, y: 0});
-      }
-    }
+        this.refs.scrolltabs.scrollTo({x: curTabLayout.x - overscrollValue, y: 0});
+    };
   },
 
   onTabLayout(event, page) {
@@ -160,6 +163,7 @@ var DefaultTabBar = React.createClass({
         <ScrollView horizontal={true}
                     showsHorizontalScrollIndicator={false}
                     ref={"scrolltabs"}
+                    bounces={false}
                     scrollEventThrottle={16}
                     onScroll={(e) => {this.setState({tabScrollValue: e.nativeEvent.contentOffset.x})}}>
           {this.props.tabs.map((tab, i) => this.renderTabOption(tab, i))}
