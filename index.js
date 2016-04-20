@@ -65,6 +65,8 @@ const ScrollableTabView = React.createClass({
     } else {
       this.scrollView.setPage(pageNumber);
     }
+
+    this.setState({currentPage: pageNumber, });
   },
 
   renderTabBar(props) {
@@ -89,12 +91,33 @@ const ScrollableTabView = React.createClass({
           contentOffset={{ x: this.props.initialPage * this.state.containerWidth, }}
           ref={(scrollView) => { this.scrollView = scrollView; }}
           onScroll={(e) => {
-            let offsetX = e.nativeEvent.contentOffset.x;
-            let currentScrollValue = offsetX / this.state.containerWidth;
-            let currentPage = Math.round(currentScrollValue);
-            this._updateScrollValue(currentScrollValue);
-            if (currentPage != this.state.currentPage)
-              this._updateSelectedPage(currentPage);
+            const offsetX = e.nativeEvent.contentOffset.x;
+            this._updateScrollValue(offsetX / this.state.containerWidth);
+          }}
+          onMomentumScrollBegin={(e) => {
+            const nativeEvent = e.nativeEvent;
+            const currentScrollValue = nativeEvent.contentOffset.x / this.state.containerWidth;
+            const currentPage = Math.floor(currentScrollValue);
+            const totalPages = nativeEvent.contentSize.width/nativeEvent.layoutMeasurement.width;
+
+            if (!((0 < currentPage+1) && (currentPage+1 < totalPages))) return;
+
+            if ((currentScrollValue % 1 > 0) && (currentPage == this.state.currentPage )) {
+              setTimeout(() => {
+                if (this.state.scrollValue._value > currentScrollValue)
+                  this._updateSelectedPage(currentPage + 1);
+              }, 60)
+
+            } else if ((currentScrollValue % 1 < 1) && (currentPage != this.state.currentPage )) {
+              setTimeout(() => {
+                if (this.state.scrollValue._value < currentScrollValue)
+                  this._updateSelectedPage(currentPage);
+              }, 60)
+            }
+          }}
+          onMomentumScrollEnd={(e) => {
+            const offsetX = e.nativeEvent.contentOffset.x;
+            this._updateSelectedPage(parseInt(offsetX / this.state.containerWidth, 10));
           }}
           scrollEventThrottle={16}
           showsHorizontalScrollIndicator={false}

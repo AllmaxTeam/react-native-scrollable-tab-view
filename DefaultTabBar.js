@@ -82,15 +82,12 @@ var DefaultTabBar = React.createClass({
 
     if ((curTabLayout.x + curTabLayout.width - this.state.tabScrollValue) > screen_width - deadzoneValue) {
         let scrollValue = curTabLayout.x + curTabLayout.width - screen_width;
-        if (Object.keys(this.tabState).length != this.props.activeTab + 1)
-        scrollValue += overscrollValue;
+        if (this.props.tabs.length != this.props.activeTab + 1) scrollValue += overscrollValue;
         this.refs.scrolltabs.scrollTo({x: scrollValue, y: 0});
 
     } else if (curTabLayout.x - deadzoneValue < this.state.tabScrollValue) {
-        if (this.props.activeTab === 0)
-        this.refs.scrolltabs.scrollTo({x: 0, y: 0});
-        else
-        this.refs.scrolltabs.scrollTo({x: curTabLayout.x - overscrollValue, y: 0});
+        if (this.props.activeTab === 0) this.refs.scrolltabs.scrollTo({x: 0, y: 0});
+        else this.refs.scrolltabs.scrollTo({x: curTabLayout.x - overscrollValue, y: 0});
     };
   },
 
