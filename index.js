@@ -8,7 +8,6 @@ const {
   Platform,
   StyleSheet,
   ViewPagerAndroid,
-  PropTypes,
   InteractionManager,
 } = ReactNative;
 
@@ -22,14 +21,14 @@ const ScrollableTabView = React.createClass({
   },
 
   propTypes: {
-    tabBarPosition: PropTypes.oneOf(['top', 'bottom', 'overlayTop', 'overlayBottom', ]),
-    initialPage: PropTypes.number,
-    page: PropTypes.number,
-    onChangeTab: PropTypes.func,
-    onScroll: PropTypes.func,
-    renderTabBar: PropTypes.any,
+    tabBarPosition: React.PropTypes.oneOf(['top', 'bottom', 'overlayTop', 'overlayBottom', ]),
+    initialPage: React.PropTypes.number,
+    page: React.PropTypes.number,
+    onChangeTab: React.PropTypes.func,
+    onScroll: React.PropTypes.func,
+    renderTabBar: React.PropTypes.any,
     style: View.propTypes.style,
-    contentProps: PropTypes.object
+    contentProps: React.PropTypes.object
   },
 
   getDefaultProps() {
