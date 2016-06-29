@@ -1,6 +1,7 @@
 'use strict';
 
-var React = require('react-native');
+var React = require('react');
+var ReactNative = require('react-native');
 var {
   StyleSheet,
   Text,
@@ -9,7 +10,7 @@ var {
   Animated,
   ScrollView,
   Dimensions
-} = React;
+} = ReactNative;
 
 var screen_width = Dimensions.get('window').width;
 

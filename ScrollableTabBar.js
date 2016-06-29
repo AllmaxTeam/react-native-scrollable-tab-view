@@ -1,4 +1,5 @@
-var React = require('react-native');
+var React = require('react');
+var ReactNative = require('react-native');
 var {
   View,
   Animated,
@@ -7,7 +8,7 @@ var {
   TouchableOpacity,
   Text,
   Platform,
-} = React;
+} = ReactNative;
 
 const TAB_HEIGHT = 50;
 

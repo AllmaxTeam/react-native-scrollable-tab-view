@@ -1,9 +1,12 @@
-import React, {
+import React from 'react';
+
+import {
   StyleSheet,
   Text,
   View,
   ScrollView,
 } from 'react-native';
+
 
 import FacebookTabBar from './FacebookTabBar';
 import ScrollableTabView, { DefaultTabBar, ScrollableTabBar, } from 'react-native-scrollable-tab-view';

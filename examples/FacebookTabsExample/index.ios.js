@@ -1,5 +1,5 @@
-var React = require('react-native');
-var { AppRegistry,  } = React;
+var ReactNative = require('react-native');
+var { AppRegistry,  } = ReactNative;
 var FacebookTabsExample = require('./FacebookTabsExample');
 
 AppRegistry.registerComponent('FacebookTabsExample', () => FacebookTabsExample);
